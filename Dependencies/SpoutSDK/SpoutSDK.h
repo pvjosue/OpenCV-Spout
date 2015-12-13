@@ -78,7 +78,7 @@ class SPOUT_DLLEXP Spout {
 	bool SendImage(unsigned char* pixels, unsigned int width, unsigned int height, GLenum glFormat = GL_RGBA, bool bAlignment = true, bool bInvert=true);
 
 	// Receiver
-	bool CreateReceiver(char* name, unsigned int &width, unsigned int &height, bool bUseActive = false);
+	bool CreateReceiver(char* name, unsigned int &width, unsigned int &height, bool bUseActive = false, bool bForceDX9 = false);
 	void ReleaseReceiver(); 
 
 	bool ReceiveTexture(char* Sendername, unsigned int &width, unsigned int &height, GLuint TextureID = 0, GLuint TextureTarget = 0, bool bInvert = false, GLuint HostFBO=0);
@@ -181,8 +181,8 @@ class SPOUT_DLLEXP Spout {
 	SHELLEXECUTEINFOA ShExecInfo;
 
 	bool GLDXcompatible();
-	bool OpenReceiver(char *name, unsigned int& width, unsigned int& height);
-	bool InitReceiver(HWND hwnd, char* sendername, unsigned int width, unsigned int height, bool bMemoryMode);
+	bool OpenReceiver(char *name, unsigned int& width, unsigned int& height,bool bForceDX9 = false);
+	bool InitReceiver(HWND hwnd, char* sendername, unsigned int width, unsigned int height, bool bMemoryMode, bool bForceDX9 = false);
 	bool InitSender(HWND hwnd, char* sendername, unsigned int width, unsigned int height, DWORD dwFormat, bool bMemoryMode);
 	bool InitMemoryShare(bool bReceiver);
 	bool ReleaseMemoryShare();

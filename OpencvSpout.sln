@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpencvSpout", "OpencvSpout\OpencvSpout.vcxproj", "{E89C7490-B139-4351-BADF-632390B3BBCB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A} = {5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0} = {A621CCC8-67A6-4B0F-BDEE-56291B7283C0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpoutSDK", "Dependencies\SpoutSDK\VS2012\SpoutSDK.vcxproj", "{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpoutDLL", "Dependencies\SpoutSDK\SPOUTDLL\VS2012\SpoutDLL.vcxproj", "{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,22 @@ Global
 		{E89C7490-B139-4351-BADF-632390B3BBCB}.Release|Win32.Build.0 = Release|Win32
 		{E89C7490-B139-4351-BADF-632390B3BBCB}.Release|x64.ActiveCfg = Release|x64
 		{E89C7490-B139-4351-BADF-632390B3BBCB}.Release|x64.Build.0 = Release|x64
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Debug|Win32.Build.0 = Debug|Win32
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Debug|x64.ActiveCfg = Debug|x64
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Debug|x64.Build.0 = Debug|x64
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Release|Win32.ActiveCfg = Release|Win32
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Release|Win32.Build.0 = Release|Win32
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Release|x64.ActiveCfg = Release|x64
+		{A621CCC8-67A6-4B0F-BDEE-56291B7283C0}.Release|x64.Build.0 = Release|x64
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Debug|Win32.Build.0 = Debug|Win32
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Debug|x64.ActiveCfg = Debug|x64
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Debug|x64.Build.0 = Debug|x64
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Release|Win32.ActiveCfg = Release|Win32
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Release|Win32.Build.0 = Release|Win32
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Release|x64.ActiveCfg = Release|x64
+		{5B1B1838-EEBA-4EBC-81D1-9E6159F3354A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

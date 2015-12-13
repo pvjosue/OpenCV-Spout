@@ -1,16 +1,15 @@
 // OpencvSpout.cpp: define el punto de entrada de la aplicación de consola.
 //
 #include "stdafx.h"
+#include <iostream>
 #include "Glew\glew.h"
 #include "GL\freeglut.h"
-#include <iostream>
 #include "opencv2\opencv.hpp"
 #include "Opencv2Opengl.h"
 
 using namespace std;
 using namespace cv;
-
-
+#define USE_GLEW
 int main(int argc, char **argv)
 {
 	
@@ -19,7 +18,7 @@ int main(int argc, char **argv)
 	cv::Mat gray = cv::Mat();
 	Mat img;
 	VideoCapture cap;
-	Opencv2Spout conversor(argc, argv,640,480);
+	Opencv2Spout conversor(argc, argv,640,480,false);
 	char nombreReceiver[256];
 	strcpy_s(nombreReceiver, 256, "opencvReceiver");
 	bool receiverExists = conversor.initReceiver(nombreReceiver);

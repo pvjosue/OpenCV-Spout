@@ -2,8 +2,8 @@
 #include "opencv2\core.hpp"
 #include "Glew\glew.h"
 #include "GL\freeglut.h"
-#include "Spout\Spout.h"
-#include "Spout\SpoutDLL.h"
+#include "Spout.h"
+#include "SpoutDLL.h"
 class Opencv2Spout
 {
 public:
@@ -13,6 +13,8 @@ public:
 	void draw(cv::Mat &camFrame,bool drawImage);
 	bool initReceiver(char* name);
 	cv::Mat receiveTexture();
+private:
+	bool m_bReceiverCreated;
 	unsigned int m_iWidth, m_iHeight;
 	char* m_receiverName;
 	SpoutSender* spout;

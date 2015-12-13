@@ -103,7 +103,7 @@ spoutGLDXinterop::spoutGLDXinterop() {
 	m_hAccessMutex      = NULL;
 
 	// DX9
-	bUseDX9				= false; // Use DX11 (default false) or DX9 (true)
+	bUseDX9				= true; // Use DX11 (default false) or DX9 (true)
 	m_pD3D				= NULL;
 	m_pDevice			= NULL;
 	m_dxTexture			= NULL;
@@ -458,7 +458,7 @@ bool spoutGLDXinterop::GetAdapterInfo(char *renderadapter,
 
 
 //
-bool spoutGLDXinterop::CreateInterop(HWND hWnd, char* sendername, unsigned int width, unsigned int height, DWORD dwFormat, bool bReceive)
+bool spoutGLDXinterop::CreateInterop(HWND hWnd, char* sendername, unsigned int width, unsigned int height, DWORD dwFormat, bool bReceive, bool bForceDX9)
 {
 	bool bRet = true;
 	DWORD format;
@@ -479,6 +479,7 @@ bool spoutGLDXinterop::CreateInterop(HWND hWnd, char* sendername, unsigned int w
 	// Allow for compatible DirectX 11 senders (format 87)
 	// And compatible DirectX9 senders D3DFMT_X8R8G8B8 - 22
 	// and the default D3DFMT_A8R8G8B8 - 21
+
 	if(bUseDX9) {
 		// printf("CreateInterop - DX9 mode\n"); 
 		// DirectX 9
@@ -561,9 +562,10 @@ bool spoutGLDXinterop::CreateInterop(HWND hWnd, char* sendername, unsigned int w
 		glDeleteFramebuffersEXT(1, &m_fbo);
 		m_fbo = 0;
 	}
+
 	if(m_fbo == 0)
 		glGenFramebuffersEXT(1, &m_fbo); 
-
+	
 	// Create a local opengl texture that will be linked to a shared DirectX texture
 	if(m_glTexture) {
 		glDeleteTextures(1, &m_glTexture);

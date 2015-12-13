@@ -59,7 +59,7 @@ class SPOUT_DLLEXP spoutGLDXinterop {
 
 		// Initialization functions
 		bool LoadGLextensions(); // Load required opengl extensions
-		bool CreateInterop(HWND hWnd, char* sendername, unsigned int width, unsigned int height, DWORD dwFormat, bool bReceive = true);
+		bool CreateInterop(HWND hWnd, char* sendername, unsigned int width, unsigned int height, DWORD dwFormat, bool bReceive = true, bool bForceDX9 = false);
 		bool CheckInterop(HWND hWnd); // Check for successful open of the interop
 		void CleanupInterop(bool bExit = false); // Cleanup with flag to avoid unknown crash bug
 

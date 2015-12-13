@@ -216,7 +216,7 @@ void Spout::ReleaseSender(DWORD dwMsec)
 }
 
 // 27.07-14 - change logic to allow an optional user flag to use the active sender
-bool Spout::CreateReceiver(char* sendername, unsigned int &width, unsigned int &height, bool bActive)
+bool Spout::CreateReceiver(char* sendername, unsigned int &width, unsigned int &height, bool bActive,bool bForceDX9)
 {
 
 	char UserName[256];
@@ -232,7 +232,7 @@ bool Spout::CreateReceiver(char* sendername, unsigned int &width, unsigned int &
 		bUseActive = false; // set global flag to use the active sender or not
 	}
 
-	if(OpenReceiver(UserName, width, height)) {
+	if(OpenReceiver(UserName, width, height, bForceDX9)) {
 		strcpy_s(sendername, 256, UserName); // pass back the sendername used
 		return true;
 	}
@@ -1132,7 +1132,7 @@ bool Spout::SetVerticalSync(bool bSync)
 // Find if the sender exists
 // If the name begins with a null character, or the bUseActive flag has been set
 // return the active sender name if that exists
-bool Spout::OpenReceiver (char* theName, unsigned int& theWidth, unsigned int& theHeight)
+bool Spout::OpenReceiver (char* theName, unsigned int& theWidth, unsigned int& theHeight,bool bForceDX9)
 {
 	char Sendername[256]; // user entered Sender name
 	DWORD dwFormat;
@@ -1168,7 +1168,7 @@ bool Spout::OpenReceiver (char* theName, unsigned int& theWidth, unsigned int& t
 	height = theHeight;
 
 	// Make sure it has been initialized
-	if(!OpenSpout(false)) {
+	if (!OpenSpout(bForceDX9)) {
 		// printf("OpenReceiver - OpenSpout failed\n", g_hWnd);
 		return false;
 	}
@@ -1208,7 +1208,7 @@ bool Spout::OpenReceiver (char* theName, unsigned int& theWidth, unsigned int& t
 	}
 
 	// Initialize a receiver in either memoryshare or texture mode
-	if(InitReceiver(g_hWnd, Sendername, width, height, bMemoryMode)) {
+	if(InitReceiver(g_hWnd, Sendername, width, height, bMemoryMode, bForceDX9)) {
 		// Pass back the sender name and size now that the global
 		// width and height have been set
 		strcpy_s(theName, 256, Sendername); // DEBUG global?
@@ -1395,7 +1395,7 @@ bool Spout::InitSender (HWND hwnd, char* theSendername, unsigned int theWidth, u
 } // end InitSender
 
 
-bool Spout::InitReceiver (HWND hwnd, char* theSendername, unsigned int theWidth, unsigned int theHeight, bool bMemoryMode) 
+bool Spout::InitReceiver(HWND hwnd, char* theSendername, unsigned int theWidth, unsigned int theHeight, bool bMemoryMode, bool bForceDX9)
 {
 
 	char sendername[256];
@@ -1452,7 +1452,7 @@ bool Spout::InitReceiver (HWND hwnd, char* theSendername, unsigned int theWidth,
 		// printf("InitReceiver 5 (%x) (%s) %dx%d (%d)\n", hwnd, sendername, width, height, format);
 
 		// Initialize the receiver interop (this will create globals local to the interop class)
-		if(!interop.CreateInterop(hwnd, sendername, width, height, format, true)) { // true meaning receiver
+		if(!interop.CreateInterop(hwnd, sendername, width, height, format, true, bForceDX9)) { // true meaning receiver
 			return false;
 		}
 

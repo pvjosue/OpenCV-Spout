@@ -16,9 +16,12 @@ Opencv2Spout::Opencv2Spout(int argc, char **argv, unsigned int width, unsigned i
 	glutCreateWindow("OpenGL First Window");
 
 	glewInit();
+	
 	printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
-	 
+	m_bReceiverCreated = false;
 	spout = new SpoutSender();
+	//spout->SetAdapter(1);
+	spout->SetDX9(forceDX9);
 	if (!spout->CreateSender("Opencv2Spout", width, height,forceDX9))
 	{
 		int lastError = GetLastError();
@@ -33,6 +36,8 @@ Opencv2Spout::Opencv2Spout(int argc, char **argv, unsigned int width, unsigned i
 		default:
 			cout << "last error " << lastError;
 		}
+		int a;
+		cin >> a;
 		exit(0);
 	}
 }
@@ -40,7 +45,12 @@ bool Opencv2Spout::initReceiver(char* name)
 {
 	m_receiverName = name;
 	spoutReceiver = new SpoutReceiver();
-	return spoutReceiver->CreateReceiver(m_receiverName, m_iWidth, m_iHeight);
+	if (spoutReceiver->CreateReceiver(m_receiverName, m_iWidth, m_iHeight))
+	{
+		m_bReceiverCreated = true;
+		return true;
+	}
+	return false;
 }
 
 cv::Mat Opencv2Spout::receiveTexture()
@@ -51,41 +61,15 @@ cv::Mat Opencv2Spout::receiveTexture()
 		return img;
 	img.create(0, 0, CV_8UC3);
 	return img;
-
-
-	/*
-	if (!spoutReceiver->ReceiveTexture(m_receiverName, m_iWidth, m_iHeight, 0, 0, true))
-		return img;
-	if(spoutReceiver->BindSharedTexture())
-	{
-		img.create(m_iHeight, m_iWidth, CV_8UC3);
-		//use fast 4-byte alignment (default anyway) if possible
-		glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3) ? 1 : 4);
-
-		//set length of one complete row in destination data (doesn't need to equal img.cols)
-		glPixelStorei(GL_PACK_ROW_LENGTH, img.step / img.elemSize());
-
-		glReadPixels(0, 0, img.cols, img.rows, GL_BGR, GL_UNSIGNED_BYTE, img.data);
-
-		spoutReceiver->UnBindSharedTexture();
-	}
-	*/
-	return img;
 }
 Opencv2Spout::~Opencv2Spout()
 {
 	spout->ReleaseSender();
-	if (spoutReceiver)
+	if (m_bReceiverCreated)
 		spoutReceiver->ReleaseReceiver();
 }
 void Opencv2Spout::draw(cv::Mat &camFrame,bool drawImage)
 {
-	// Clear the screen and depth buffer, and reset the ModelView matrix to identity
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glLoadIdentity();
-
-	//glEnable(GL_TEXTURE_2D);
-
 	// Convert image and depth data to OpenGL textures
 	if (drawImage)
 	{
@@ -95,31 +79,10 @@ void Opencv2Spout::draw(cv::Mat &camFrame,bool drawImage)
 	else
 		destroyWindow("OpencvSpout");
 	Mat temp;
-	cv::flip(camFrame, temp, -1);
+	cv::flip(camFrame, temp,0);
 	GLuint imageTex = matToTexture(temp, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP);
 
-	// Draw the textures
-	// Note: Window co-ordinates origin is top left, texture co-ordinate origin is bottom left.
-	/*
-	// Front facing texture
-	glBindTexture(GL_TEXTURE_2D, imageTex);
-	glBegin(GL_QUADS);
-	glTexCoord2f(1, 1);
-	glVertex2f(-1.0f, 1.0f);
-	glTexCoord2f(0, 1);
-	glVertex2f(1.0f, 1.0f);
-	glTexCoord2f(0, 0);
-	glVertex2f(1.0f, -1.0f);
-	glTexCoord2f(1, 0);
-	glVertex2f(-1.0f, -1.0f);
-	glEnd();
-
-	// Free the texture memory
-
-	glDisable(GL_TEXTURE_2D);
-	glutSwapBuffers();
-	*/
-	spout->SendTexture(imageTex, GL_TEXTURE_2D, 640, 480);
+	spout->SendTexture(imageTex, GL_TEXTURE_2D, m_iWidth, m_iHeight);
 	glDeleteTextures(1, &imageTex);
 }
 GLuint Opencv2Spout::matToTexture(cv::Mat &image, GLenum minFilter, GLenum magFilter, GLenum wrapFilter)
@@ -161,14 +124,14 @@ GLuint Opencv2Spout::matToTexture(cv::Mat &image, GLenum minFilter, GLenum magFi
 
 	// Create the texture
 	glTexImage2D(GL_TEXTURE_2D,     // Type of texture
-		0,                 // Pyramid level (for mip-mapping) - 0 is the top level
-		GL_RGB,            // Internal colour format to convert to
-		image.cols,          // Image width  i.e. 640 for Kinect in standard mode
-		image.rows,          // Image height i.e. 480 for Kinect in standard mode
-		0,                 // Border width in pixels (can either be 1 or 0)
-		inputColourFormat, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
-		GL_UNSIGNED_BYTE,  // Image data type
-		image.ptr());        // The actual image data itself
+		0,							// Pyramid level (for mip-mapping) - 0 is the top level
+		GL_RGB,						// Internal colour format to convert to
+		image.cols,					// Image width  i.e. 640 for Kinect in standard mode
+		image.rows,					// Image height i.e. 480 for Kinect in standard mode
+		0,							// Border width in pixels (can either be 1 or 0)
+		inputColourFormat,			// Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+		GL_UNSIGNED_BYTE,			// Image data type
+		image.ptr());				// The actual image data itself
 
 	// If we're using mipmaps then generate them. Note: This requires OpenGL 3.0 or higher
 	if (minFilter == GL_LINEAR_MIPMAP_LINEAR ||

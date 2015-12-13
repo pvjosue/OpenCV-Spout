@@ -45,7 +45,6 @@
 
 SpoutReceiver::SpoutReceiver()
 {
-
 }
 
 
